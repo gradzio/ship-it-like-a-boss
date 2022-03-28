@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpFeatureFlagsServiceModule } from '@feature-flags';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,7 +13,6 @@ import { MatCardModule } from '@angular/material/card';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpFeatureFlagsServiceModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,

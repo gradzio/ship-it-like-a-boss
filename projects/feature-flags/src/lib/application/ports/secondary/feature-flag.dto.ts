@@ -1,4 +1,5 @@
 export interface FeatureFlagDTO {
-  readonly id: string;
+  readonly id: number;
   readonly name: string;
+  readonly isEnabled: boolean;
 }

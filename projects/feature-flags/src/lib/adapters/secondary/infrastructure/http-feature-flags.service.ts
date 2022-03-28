@@ -5,20 +5,34 @@ import { GetsAllFeatureFlagDtoPort } from '../../../application/ports/secondary/
 import { FeatureFlagDTO } from '../../../application/ports/secondary/feature-flag.dto';
 import { environment } from 'src/environments/environment';
 
+interface FlagSmithResponse {
+  id: number;
+  enabled: boolean;
+  feature: { name: string };
+}
+
 @Injectable()
 export class HttpFeatureFlagsService implements GetsAllFeatureFlagDtoPort {
   constructor(private _client: HttpClient) {}
 
-  getAll(): Observable<FeatureFlagDTO[]> {
+  getAll(): Observable<Set<FeatureFlagDTO>> {
     return this._client
-      .get<{ feature: FeatureFlagDTO }[]>(
-        'https://api.flagsmith.com/api/v1/flags',
-        {
-          headers: {
-            'X-Environment-Key': environment.flagsmith.environmentKey,
-          },
-        }
-      )
-      .pipe(map((response) => response.map((i) => i.feature)));
+      .get<FlagSmithResponse[]>(`${environment.flagsmith.url}/api/v1/flags`, {
+        headers: {
+          'X-Environment-Key': environment.flagsmith.environmentKey,
+        },
+      })
+      .pipe(
+        map(
+          (response) =>
+            new Set(
+              response.map((i) => ({
+                id: i.id,
+                name: i.feature.name,
+                isEnabled: i.enabled,
+              }))
+            )
+        )
+      );
   }
 }

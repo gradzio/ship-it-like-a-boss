@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   flagsmith: {
+    url: 'https://api.flagsmith.com',
     environmentKey: 'DAD8rYqjjrKqaEtDaVJRgR',
   },
 };
