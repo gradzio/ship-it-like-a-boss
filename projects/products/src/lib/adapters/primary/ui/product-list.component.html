@@ -1,0 +1,3 @@
+<mat-list class="bg-white">
+  <mat-list-item *ngFor="let product of products$ | async"> {{product.name}} for {{product.price / 100 | currency}} </mat-list-item>
+</mat-list>

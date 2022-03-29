@@ -1,5 +1,6 @@
 export interface ProductDTO {
-  readonly id: string;
+  readonly id: number;
   readonly name: string;
   readonly price: number;
+  readonly imageUrl: string;
 }

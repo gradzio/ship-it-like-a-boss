@@ -1,1 +1,7 @@
 <h1>HomePage</h1>
+<div class="row">
+  <lib-product-list></lib-product-list>
+</div>
+<div *ifFlag="'product-grid'" class="row">
+  <lib-product-grid></lib-product-grid>
+</div>

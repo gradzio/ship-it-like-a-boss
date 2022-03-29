@@ -6,10 +6,6 @@ import {
   FEATURE_FLAG_DTO_STORAGE,
 } from '../ports/secondary/feature-flag-dto.storage-port';
 import {
-  GETS_ALL_FEATURE_FLAG_DTO,
-  GetsAllFeatureFlagDtoPort,
-} from '../ports/secondary/gets-all-feature-flag.dto-port';
-import {
   GETS_ALL_FEATURE_FLAG_CONTEXT_DTO,
   GetsAllFeatureFlagContextDtoPort,
 } from '../ports/secondary/gets-all-feature-flag-context.dto-port';
@@ -25,36 +21,22 @@ export class FeatureFlagsState
   constructor(
     @Inject(FEATURE_FLAG_DTO_STORAGE)
     private _featureFlagDtoStorage: FeatureFlagDtoStorage,
-    @Inject(GETS_ALL_FEATURE_FLAG_DTO)
-    private _getsAllFeatureFlagDto: GetsAllFeatureFlagDtoPort,
     @Inject(GETS_ALL_FEATURE_FLAG_CONTEXT_DTO)
     private _getsAllFeatureFlagContextDto: GetsAllFeatureFlagContextDtoPort
   ) {}
 
   loadFeatureFlags(command: LoadFeatureFlagsCommand): void {
-    if (command.identity === null) {
-      this._getsAllFeatureFlagDto
-        .getAll()
-        .subscribe((flags) =>
-          this._featureFlagDtoStorage.setState(
-            [...flags].reduce(
-              (flags, flag) => flags.set(flag.name, flag.isEnabled),
-              new Map<string, boolean>()
-            )
+    const identity = command.identity ?? 'annonymous';
+    this._getsAllFeatureFlagContextDto
+      .getAll({ identity })
+      .subscribe((flags) =>
+        this._featureFlagDtoStorage.setState(
+          [...flags].reduce(
+            (flags, flag) => flags.set(flag.name, flag.isEnabled),
+            new Map<string, boolean>()
           )
-        );
-    } else {
-      this._getsAllFeatureFlagContextDto
-        .getAll({ identity: command.identity })
-        .subscribe((flags) =>
-          this._featureFlagDtoStorage.setState(
-            [...flags].reduce(
-              (flags, flag) => flags.set(flag.name, flag.isEnabled),
-              new Map<string, boolean>()
-            )
-          )
-        );
-    }
+        )
+      );
   }
 
   getCurrentFeatureFlagQuery(flagName: string): Observable<FeatureFlagQuery> {
