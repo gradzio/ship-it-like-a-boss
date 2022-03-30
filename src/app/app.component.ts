@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ship-it-like-a-boss';
+  email = localStorage.getItem('acme_identity');
 }
